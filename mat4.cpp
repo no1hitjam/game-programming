@@ -1,6 +1,8 @@
 #include "vec3.h"
 #include "mat4.h"
 
+#define PI 3.14159265359
+
 	// ** 2A: **
 
 Mat4::Mat4( )
@@ -61,9 +63,9 @@ Mat4::operator*( Vec3& that )
 	// "that" is a reference to the vector (that.name)
 
 	Vec3 result;
-	result = Vec3( this->m[0][0] * that.x + this->m[0][1] * that.x + this->m[0][2] * that.x + this->m[0][3] * that.x ,
-				   this->m[1][0] * that.y + this->m[1][1] * that.y + this->m[1][2] * that.y + this->m[1][3] * that.y ,
-				   this->m[2][0] * that.z + this->m[2][1] * that.z + this->m[2][2] * that.z + this->m[2][3] * that.z );
+	result = Vec3( this->m[0][0] * that.x + this->m[1][0] * that.x + this->m[2][0] * that.x + this->m[3][0] * that.x ,
+				   this->m[0][1] * that.y + this->m[1][1] * that.y + this->m[2][1] * that.y + this->m[3][1] * that.y ,
+				   this->m[0][2] * that.z + this->m[1][2] * that.z + this->m[2][2] * that.z + this->m[3][2] * that.z );
 	return result;
 }
 
@@ -82,7 +84,6 @@ Mat4::Print( char *str, FILE *fp )
 void
 Mat4::SetIdentity( )
 {
-	// "this" is a pointer to this class's mat4  (this->name)
 	this->m[0][0]	= 1;	this->m[0][1]	= 0;	this->m[0][2]	= 0;	this->m[0][3]	= 0;
 	this->m[1][0]	= 0;	this->m[1][1]	= 1;	this->m[1][2]	= 0;	this->m[1][3]	= 0;
 	this->m[2][0]	= 0;	this->m[2][1]	= 0;	this->m[2][2]	= 1;	this->m[2][3]	= 0;
@@ -91,28 +92,43 @@ Mat4::SetIdentity( )
 
 	// ** 2B: **
 
-void
-Mat4::SetRotateX( float deg )
+double
+sind( double x )
 {
-	// "this" is a pointer to this class's mat4  (this->name)
+	return sin( x * PI / 180 );
+}
 
-	//this->m ?
+double
+cosd( double x )
+{
+	return cos( x * PI / 180 );
 }
 
 void
-Mat4::SetRotateY( float deg )
+Mat4::SetRotateX( float d )
 {
-	// "this" is a pointer to this class's mat4  (this->name)
-
-	//this->m ?
+	this->m[0][0]	= 1;	this->m[0][1]	= 0;	this->m[0][2]	= 0;	this->m[0][3]	= 0;
+	this->m[1][0]	= 0;	this->m[1][1]= cosd(d);	this->m[1][2]=-sind(d);	this->m[1][3]	= 0;
+	this->m[2][0]	= 0;	this->m[2][1]= sind(d);	this->m[2][2]= cosd(d);	this->m[2][3]	= 0;
+	this->m[3][0]	= 0;	this->m[3][1]	= 0;	this->m[3][2]	= 0;	this->m[3][3]	= 1;
 }
 
 void
-Mat4::SetRotateZ( float deg )
+Mat4::SetRotateY( float d )
 {
-	// "this" is a pointer to this class's mat4  (this->name)
+	this->m[0][0]= cosd(d);	this->m[0][1]	= 0;	this->m[0][2]= sind(d);	this->m[0][3]	= 0;
+	this->m[1][0]	= 0;	this->m[1][1]	= 1;	this->m[1][2]	= 0;	this->m[1][3]	= 0;
+	this->m[2][0]=-sind(d);	this->m[2][1]	= 0;	this->m[2][2]= cosd(d);	this->m[2][3]	= 0;
+	this->m[3][0]	= 0;	this->m[3][1]	= 0;	this->m[3][2]	= 0;	this->m[3][3]	= 1;
+}
 
-	//this->m ?
+void
+Mat4::SetRotateZ( float d )
+{
+	this->m[0][0]= cosd(d);	this->m[0][1]=-sind(d);	this->m[0][2]	= 0;	this->m[0][3]	= 0;
+	this->m[1][0]= sind(d);	this->m[1][1]= cosd(d);	this->m[1][2]	= 0;	this->m[1][3]	= 0;
+	this->m[2][0]	= 0;	this->m[2][1]	= 0;	this->m[2][2]	= 1;	this->m[2][3]	= 0;
+	this->m[3][0]	= 0;	this->m[3][1]	= 0;	this->m[3][2]	= 0;	this->m[3][3]	= 1;
 }
 
 
@@ -120,14 +136,17 @@ Mat4::SetRotateZ( float deg )
 void
 Mat4::SetScale( float sx, float sy, float sz )
 {
-	// "this" is a pointer to this class's mat4  (this->name)
-
-	//this->m ?
+	this->m[0][0]	= sx;	this->m[0][1]	= 0;	this->m[0][2]	= 0;	this->m[0][3]	= 0;
+	this->m[1][0]	= 0;	this->m[1][1]	= sy;	this->m[1][2]	= 0;	this->m[1][3]	= 0;
+	this->m[2][0]	= 0;	this->m[2][1]	= 0;	this->m[2][2]	= sz;	this->m[2][3]	= 0;
+	this->m[3][0]	= 0;	this->m[3][1]	= 0;	this->m[3][2]	= 0;	this->m[3][3]	= 1;
 }
 
 void
 Mat4::SetTranslate( float tx, float ty, float tz )
 {
-	// "this" is a pointer to this class's mat4  (this->name)
-	
+	this->m[0][0]	= 1;	this->m[0][1]	= 0;	this->m[0][2]	= 0;	this->m[0][3]	= tx;
+	this->m[1][0]	= 0;	this->m[1][1]	= 1;	this->m[1][2]	= 0;	this->m[1][3]	= ty;
+	this->m[2][0]	= 0;	this->m[2][1]	= 0;	this->m[2][2]	= 1;	this->m[2][3]	= tz;
+	this->m[3][0]	= 0;	this->m[3][1]	= 0;	this->m[3][2]	= 0;	this->m[3][3]	= 1;
 }
